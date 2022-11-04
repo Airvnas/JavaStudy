@@ -1,4 +1,4 @@
-package day02;
+package com.multicamp;
 //VO(Value Object),DTO(DATA Transfer Object)
 //domain 객체
 //db table의 record ==> 클래스로 옮겨 구성
