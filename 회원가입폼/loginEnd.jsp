@@ -5,6 +5,10 @@
 	request.setCharacterEncoding("utf-8");
 	String userid=request.getParameter("userid");
 	String pwd=request.getParameter("pwd");
+	//아이디 저장 값 받기
+	String saveId=request.getParameter("saveId");
+	System.out.println("saveId: "+saveId);
+	
 	//2.유효성 체크=>login.jsp
 	if(userid==null||userid.trim().isEmpty()||pwd==null||pwd.trim().isEmpty()){
 		response.sendRedirect("login.jsp");
@@ -30,9 +34,20 @@
 		*/
 		session.setAttribute("loginUser", loginUser);
 		//session은 서버쪽에 저장, cookie는 클라이언트쪽에 저장
+		
+		//(1)saveId에 체크를 했다면 쿠키를 생성해서 사용자 아이디를 저장하고 유효시간을 설정하자(1주일)
+		Cookie ck=new Cookie("uid",userid);
+		if(saveId!=null){
+			ck.setMaxAge(60*60*24*7);
+		}
+		//(2)response에 쿠키를 추가
+		else {
+			ck.setMaxAge(0);
+		}
+		ck.setPath("/");
+		response.addCookie(ck);
+		//saveId에 체크를 안했다면==>쿠키삭제
 		response.sendRedirect("../index.jsp");
-		
-		
 	}
 	
 %>

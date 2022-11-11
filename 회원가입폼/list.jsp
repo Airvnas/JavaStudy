@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="java.util.*,user.model.*"%>
+<!-- 관리자 체크 모듈------------------------------------------ -->
+<%@ include file="/login/adminCheckModule.jsp" %>
+<!--------------------------------------------------------- -->
 <%--<jsp:useBean id="user" class="user.model.UserVO" scope="page"/> --%>
 <jsp:useBean id="userDao" class="user.model.UserDAO" scope="session"/>
 
@@ -36,9 +39,9 @@
 			<td><%=vo.getUserid() %></td>
 			<td><%=vo.getAllHp() %></td>
 			<td class="state<%=vo.getStatus() %>">
-			<%=(vo.getStatus()==0)?"활동회원":(vo.getStatus()==-1)?"정지회원":"탈퇴회원" %>
+			<%=(vo.getStatus()>=0)?"활동회원":(vo.getStatus()==-1)?"정지회원":"탈퇴회원" %>
 			</td>
-			<td><a>수정 </a><a>삭제 </a></td>
+			<td><a href="modify.jsp?idx=<%=vo.getIdx()%>">수정 </a><a>삭제 </a></td>
 			
 		</tr>
 		<% }

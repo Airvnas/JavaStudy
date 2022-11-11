@@ -30,7 +30,21 @@
 	}//-------------------------
 
 </script>
-
+<%
+	Cookie[] cks=request.getCookies();
+	String uid="";
+	boolean flag=false;
+	if(cks!=null){
+		for(Cookie ck:cks){
+			String key=ck.getName();
+			if(key.equals("uid")){
+				uid=ck.getValue();
+				flag=true;
+				break;
+			}
+		}
+	}
+%>
 <div class="container">
 	<br><br>
 	<h1>Login</h1>
@@ -43,7 +57,7 @@
 				<tr>
 					<td width="20%" class="m1"><b>아이디</b></td>
 					<td width="80%" class="m2">
-						<input type="text" name="userid" id="userid" placeholder="User ID">
+						<input type="text" name="userid" value="<%=uid %>" id="userid" placeholder="User ID">
 					</td>
 				</tr>
 				<tr>
@@ -55,7 +69,7 @@
 				<tr>
 					<td colspan="2" class="container">
 						<label for="saveId">
-							<input type="checkbox" name="saveId" id="saveId">아이디저장
+							<input type="checkbox" name="saveId" <%=(flag)?"checked":"" %> id="saveId">아이디저장
 						</label>
 						<button id="btnLogin" >로그인</button>
 						<!-- default가 submit  -->
