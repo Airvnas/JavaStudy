@@ -11,11 +11,13 @@ public class BoardWriteAction extends AbstractAction {
 	
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+		req.setCharacterEncoding("UTF-8");
 		//subject,content,userid=hong
 		String subject=req.getParameter("subject");
 		String content=req.getParameter("content");
 		String userid="hong";
-		req.setCharacterEncoding("UTF-8");
+		
+		
 		if(subject==null||content==null||userid==null||subject.trim().isEmpty()) {
 			this.setViewPage("boardWrite.do");
 			this.setRediret(true);//redirect방식으로 이동

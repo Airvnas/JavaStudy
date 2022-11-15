@@ -1,7 +1,5 @@
 package board.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -9,21 +7,21 @@ import board.model.BoardDAOMyBatis;
 import board.model.BoardVO;
 import common.controller.AbstractAction;
 
-public class BoardListAction extends AbstractAction {
+public class BoardViewAction extends AbstractAction {
 
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-		
+		String numStr=req.getParameter("num");
+		if(numStr==null||numStr.trim().isEmpty()) {
+			this.setViewPage("boardList.do");
+			this.setRediret(true);
+		}
+		int num= Integer.parseInt(numStr.trim());
 		BoardDAOMyBatis dao=new BoardDAOMyBatis();
-		int count = dao.getTotalCount();
-		
-		List<BoardVO> boardArr=dao.listBoard();
-		req.setAttribute("boardArr", boardArr);
-		req.setAttribute("totalCount", count);
-		
-		this.setViewPage("board/boardList.jsp");
+		BoardVO vo=dao.viewBoard(num);
+		req.setAttribute("board",vo);
+		this.setViewPage("board/boardView.jsp");
 		this.setRediret(false);
-		
 	}
 
 }
