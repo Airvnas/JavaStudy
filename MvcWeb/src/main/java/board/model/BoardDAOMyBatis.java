@@ -2,7 +2,9 @@ package board.model;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -35,7 +37,9 @@ public class BoardDAOMyBatis {
 
 	public int insertBoard(BoardVO vo) {
 		ses=this.getSessionFactory().openSession();//디폴트가 수동커밋
+		System.out.println("insert전: vo의 num값+> "+vo.getNum());
 		int n=ses.insert(NS+".insertBoard",vo);
+		System.out.println("insert후: vo의 num값+> "+vo.getNum());
 		if(n>0) {
 			ses.commit();
 		}else {
@@ -45,11 +49,15 @@ public class BoardDAOMyBatis {
 		return n;
 	}
 
-	public List<BoardVO> listBoard() {
+	public List<BoardVO> listBoard(int start,int end) {
 		ses=this.getSessionFactory().openSession();
 		//다중행을 가져올 때는 selectList()
 		//단일행을 가져올 때는 selectOne()
-		List<BoardVO> arr= ses.selectList(NS+".listBoard");
+		Map<String,Integer> map=new HashMap<>();
+		map.put("start", start);
+		map.put("end", end);
+		
+		List<BoardVO> arr= ses.selectList(NS+".listBoard",map);
 		if(ses!=null)ses.close();
 		return arr;
 	}
@@ -83,6 +91,19 @@ public class BoardDAOMyBatis {
 		} finally {
 			close();
 		}
+	}
+
+	public int updateBoard(BoardVO vo) {
+		try {
+			ses=this.getSessionFactory().openSession(true);
+			//ses=this.getSessionFactory().openSession(true);
+			//디폴트가 수동커밋, 매개변수로 true넘기면 auto commit됨
+			int n=ses.update(NS+".updateBoard",vo);
+			return n;
+		} finally {
+			close();
+		}
+		
 	}
 	
 	

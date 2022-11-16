@@ -25,7 +25,11 @@
 			<td width="20%"><b>글쓴이</b></td>
 			<td width="30%">${board.userid }</td>
 			<td width="20%"><b>첨부파일</b></td>
-			<td width="30%">${board.filename }[${board.filesize }bytes]</td>
+			<td width="30%">
+			<a href="Upload/${board.filename}" download>
+			<img src="images/attach.png" width="20px">${board.filename }</a>
+			
+			[${board.filesize }bytes]</td>
 		</tr>
 		<tr>
 			<td width="20%"><b>제목</b></td>

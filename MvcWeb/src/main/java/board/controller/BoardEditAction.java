@@ -14,11 +14,10 @@ import board.model.BoardDAOMyBatis;
 import board.model.BoardVO;
 import common.controller.AbstractAction;
 
-public class BoardWriteAction extends AbstractAction {
-	
+public class BoardEditAction extends AbstractAction {
+
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-		//1.파일 업로드 처리==>업로드 디렉토리의 절대경로 얻어옴
 		ServletContext application=req.getServletContext();
 		String upDir=application.getRealPath("/Upload");
 		System.out.println("upDir:"+upDir);
@@ -31,35 +30,51 @@ public class BoardWriteAction extends AbstractAction {
 			e.printStackTrace();
 		}
 		
-		
 		//req.setCharacterEncoding("UTF-8");
-		//subject,content,userid=hong
+		// 1. num, userid,subject,content, filename 값 받기
+		String numStr=mr.getParameter("num");
 		String subject=mr.getParameter("subject");
-		String content=mr.getParameter("content");
 		String userid="hong";
+		String content=mr.getParameter("content");
+		//String filename=req.getParameter("filename");
 		String filename=mr.getFilesystemName("filename");
 		File file=mr.getFile("filename");
 		long filesize=0;
-		if(file!=null) {
+		
+		if(file!=null) {//첨부한 파일이 있다면
 			filesize=file.length();
-		}
-		if(subject==null||content==null||userid==null||subject.trim().isEmpty()) {
-			this.setViewPage("boardWrite.do");
-			this.setRediret(true);//redirect방식으로 이동
+			//예전에 첨부한 파일명 얻기
+			String old_file=mr.getParameter("old_file");
+			if(old_file!=null&& !old_file.trim().isEmpty()) {
+				//서버에서 예전파일 지우기
+				File delFile=new File(upDir,old_file);
+				if(delFile!=null) {
+					boolean b=delFile.delete();
+					System.out.println("파일 삭제 여부:"+b);
+				}
+			}
+			
+		}//if-------
+		
+		// 2. 유효성 체크 (num, subject,userid)
+		if(numStr==null||subject==null||userid==null||
+				numStr.trim().isEmpty()||subject.trim().isEmpty()||userid.trim().isEmpty()) {
+			this.setViewPage("boardList.do");
+			this.setRediret(true);
 			return;
 		}
-		BoardVO vo= new BoardVO(0,userid,subject,content,null,filename,filesize);
+		int num=Integer.parseInt(numStr.trim());
+		//3. 1번에서 받은 값 BoardVO에 담아주기
+		BoardVO vo= new BoardVO(num,userid,subject,content,null,filename,filesize);
 		BoardDAOMyBatis dao=new BoardDAOMyBatis();
-		int n= dao.insertBoard(vo);
-		
-		String str=(n>0)?"글쓰기 성공":"실패";
-		String loc=(n>0)?"boardList.do":"javascript:history.back()";
-		
-		req.setAttribute("msg", str);
-		req.setAttribute("loc",loc);
+		int n=dao.updateBoard(vo);
+		String msg=(n>0)?"글 수정 성공":"글 수정 실패";
+		String loc="boardList.do";
+		req.setAttribute("msg",msg);
+		req.setAttribute("loc", loc);
 		this.setViewPage("message.jsp");
 		this.setRediret(false);
-		
+			
 	}
 
 }
