@@ -54,6 +54,18 @@
 		color:white;
 	}
 </style>
+<script type="text/javascript">
+	function find_check(){
+		let $keyword=$('#findKeyword');
+		//alert($keyword.val());
+		if(!$keyword.val()){
+			alert('검색어를 입력하세요');
+			$keyword.focus();
+			return false;
+		}
+		return true;
+	}//------------------------------------
+</script>
 
 <div class="container">
 	<br>
@@ -66,6 +78,19 @@
 	</p>
 	<br>
 	<div id="boardWrap">
+		<div id="boardSearch">
+			<form name="searchF" id="searchF" action="boardList.do" 
+					method="get" onsubmit="return find_check()">
+				<select name="findType">
+					<option value="1">제 목</option>
+					<option value="2">작성자</option>
+					<option value="3">글내용</option>
+				</select>
+				<input type="text" name="findKeyword" id="findKeyword" class="m2" >
+				<button style="padding:5px;">Search</button>
+			</form>
+		</div>
+	
 		<ul id="boardList" class="boardList">
 			<li>번호</li>
 			<li>제목</li>
@@ -102,18 +127,18 @@
 		<br><br>
 		<div class="pageWrap"">
 		<ul class="paging">
-			<li><a href="boardList.do?cpage=${cpage-1}">←</a></li>
+			<li><a href="boardList.do?cpage=${cpage-1}${qStr}">←</a></li>
 			
-			<c:forEach var="i" begin="1" end="${pageCount }">
+			<c:forEach var="i" begin="1" end="${pageCount}">
 				<c:if test="${cpage==i}">
-					<li class="current"><a href="boardList.do?cpage=${i}">${i}</a></li>
+					<li class="current"><a href="boardList.do?cpage=${i}${qStr}">${i}</a></li>
 				</c:if>
 				<c:if test="${cpage!=i}">
-				<li><a href="boardList.do?cpage=${i}">${i}</a></li>
+				<li><a href="boardList.do?cpage=${i}${qStr}">${i}</a></li>
 				</c:if>
 			</c:forEach>
 			
-			<li><a href="boardList.do?cpage=${cpage+1}">→</a></li>
+			<li><a href="boardList.do?cpage=${cpage+1}${qStr}">→</a></li>
 		</ul>
 		</div>
 		<br><br>

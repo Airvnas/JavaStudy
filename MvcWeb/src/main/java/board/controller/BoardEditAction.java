@@ -6,6 +6,7 @@ import java.io.IOException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
@@ -13,14 +14,29 @@ import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 import board.model.BoardDAOMyBatis;
 import board.model.BoardVO;
 import common.controller.AbstractAction;
+import user.model.UserVO;
 
 public class BoardEditAction extends AbstractAction {
 
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+		HttpSession session= req.getSession();
+		UserVO user=(UserVO)session.getAttribute("loginUser");
+		if(user==null) {
+			req.setAttribute("msg","로그인해야 글수정이 가능합니다.");
+			req.setAttribute("loc","javascript:history.back()");
+			this.setViewPage("message.jsp");
+			this.setRediret(false);
+			return;
+		}
+		
 		ServletContext application=req.getServletContext();
 		String upDir=application.getRealPath("/Upload");
 		System.out.println("upDir:"+upDir);
+		File dir=new File(upDir);
+		if(!dir.exists()) {
+			dir.mkdirs();//업로드 디렉토리 생성
+		}
 		
 		MultipartRequest mr=null;
 		try {
@@ -34,7 +50,7 @@ public class BoardEditAction extends AbstractAction {
 		// 1. num, userid,subject,content, filename 값 받기
 		String numStr=mr.getParameter("num");
 		String subject=mr.getParameter("subject");
-		String userid="hong";
+		String userid=user.getUserid();
 		String content=mr.getParameter("content");
 		//String filename=req.getParameter("filename");
 		String filename=mr.getFilesystemName("filename");
