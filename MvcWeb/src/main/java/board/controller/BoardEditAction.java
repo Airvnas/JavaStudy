@@ -46,7 +46,6 @@ public class BoardEditAction extends AbstractAction {
 			e.printStackTrace();
 		}
 		
-		//req.setCharacterEncoding("UTF-8");
 		// 1. num, userid,subject,content, filename 값 받기
 		String numStr=mr.getParameter("num");
 		String subject=mr.getParameter("subject");

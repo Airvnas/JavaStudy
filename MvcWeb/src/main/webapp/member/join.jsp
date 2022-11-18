@@ -24,7 +24,7 @@ response.setContentType("text/html; charset=UTF-8");
 			<tr>
 				<td width="20%" class="m1"><b>아이디</b></td>
 				<td width="80%" class="m2">
-				<input type="text" name="userid" id="userid"  placeholder="Userid">
+				<input type="text" name="userid" id="userid"  placeholder="Userid" readonly>
 				<button type="button" onclick="open_idcheck()">아이디 중복 체크</button>
 				<br><span class='ck1'>*아이디는 영문자, 숫자, _, !만 사용가능합니다.</span>
 				</td>
