@@ -19,7 +19,19 @@ response.setHeader("Cache-Control","no-cache");
 	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <!-- ------------------------------------------------- -->
 <style type="text/css">
-
+	.listbox{
+		position:relative;
+		left:5px;
+		width:530px;
+		background:#efefef;
+		color:gray;
+		border:1px solid gray;
+	}
+	.blist{
+		margin:0;
+		padding:5px;
+		list-style-type:none;
+	}
 
 </style>
 <script type="text/javascript">
@@ -29,6 +41,7 @@ response.setHeader("Cache-Control","no-cache");
 		type:'get', //요청방식
 		url:'서버페이지',//요청보낼 서버페이지 url
 		cache:false,//캐시사용 안함
+		//data:'params=value&params2=value2'//post방식일때
 		dataType:'xml',//응답 유형
 		success:function(res){//성공적으로 수행될 경우 실행되는 함수
 			
@@ -39,6 +52,83 @@ response.setHeader("Cache-Control","no-cache");
 	})
 
 */	
+	
+	function getPublish(){
+		$.ajax({
+			type:'get',
+			url:'bookPublish.jsp',
+			cache:false,
+			dataType:'json'
+			
+		})
+		.done(function(res){
+			//alert(JSON.stringify(res));
+			showSelect(res);
+		})
+		.fail(function(err){
+			alert('error: '+err.status);
+		})
+		
+	}//----------------------------
+	function showSelect(data){
+		let str='<select name="publish" onchange="getTitleByPub(this.value)" >'
+			str+='<option value="">::출판사목록::</option>';
+			$.each(data,function(i,pub){
+				str+='<option value="'+pub.publish+'">'+pub.publish+"</option>";
+			})
+			str+='</select>';
+		$('#sel').html(str);
+		
+	}//----------------------------
+	
+	function showSelect2(data){
+		let str='<select name="publishTitle" onchange="bookInfo(this.value)" >'
+			str+='<option value="">::도서명 목록::</option>';
+			$.each(data,function(i,book){
+				str+='<option value="'+book.title+'">'+book.title+"</option>";
+			})
+			str+='</select>';
+		$('#sel2').html(str);
+		
+	}//----------------------------
+	
+	function bookInfo(vtitle){
+		//alert(vtitle);
+		if(vtitle=='검색'){
+			vtitle=$('#books').val();
+		}
+		
+		$.ajax({
+			type:'get',
+			url:'bookAll.jsp?title='+encodeURIComponent(vtitle),
+			cache:false,
+			dataType:'html',
+		}).done(function(res){
+			//alert(res);
+			$('#book_data').html(res);
+		}).fail(function(err){
+			alert('err: '+err.status);
+		})
+	}
+	
+	//출판사별 도서제목 가져오기
+	function getTitleByPub(val){
+		//alert(val);
+		$.ajax({
+			type:'get',
+			url:'bookTitle.jsp?publish='+encodeURIComponent(val),
+			dataType:'json',
+			cache:false,
+			success:function(res){
+				//alert(res);
+				showSelect2(res);
+			},
+			error:function(err){
+				alert('error: '+err.status)
+			}
+		})
+		
+	}
 	function goDel(visbn){
 		//alert(visbn);
 		$.ajax({
@@ -98,29 +188,48 @@ response.setHeader("Cache-Control","no-cache");
 	function goEditEnd(visbn){
 		//폼객체의 serialize()함수 활용
 		let paramStr=$('#editF').serialize();
-		//alert(paramStr);
-		$.ajax({
-			type:'POST',
-			url:'bookUpdate.jsp',
-			data:paramStr,
-			cache:false,
-			dataType:'json',
-			success:function(res){
-				let n=res.result;
-				//alert(n);
-				if(parseInt(n)>0){
-					getAllBook();
-					alert('수정 성공');
-				}
-				else {
-					alert("수정 실패");
-				}
-			},
-			error:function(err){
-				alert('error: '+err.status)
+		
+	$.ajax({
+		type:'POST',
+		url:'bookUpdate.jsp',
+		data:paramStr,
+		cache:false,
+		dataType:'json',
+	}).done(function(res){
+		//alert('성공:'+JSON.stringify(res));
+		let n=res.result;
+		//alert(n);
+		if(n>0){
+			getAllBook();
+		}
+	}).fail(function(err){
+		alert('error: '+err.status);	
+	})
+}
+	//alert(paramStr);
+	/* $.ajax({
+		type:'POST',
+		url:'bookUpdate.jsp',
+		data:paramStr,
+		cache:false,
+		dataType:'json',
+		success:function(res){
+			let n=res.result;
+			//alert(n);
+			if(parseInt(n)>0){
+				getAllBook();
+				alert('수정 성공');
 			}
-		})
-	}
+			else {
+				alert("수정 실패");
+			}
+		},
+		error:function(err){
+			alert('error: '+err.status)
+		}
+	})
+} */
+	
 	function getAllBook(){
 		//alert('a');
 		$.ajax({
@@ -133,10 +242,40 @@ response.setHeader("Cache-Control","no-cache");
 				$('#book_data').html(res);
 			},
 			error:function(err){
-				alert('error: '+err.status)
+				alert('error: '+err.status);
 			}
 		})
 	}//-------------
+	
+	function autoComp(val){
+		console.log(val);
+		$.ajax({
+			type:'get',
+			url:'autoComplete.jsp?title='+encodeURIComponent(val),
+			dataType:'html',
+			success:function(res){
+				//alert(res);
+				$('#lst2').html(res);
+				$('#lst1').show();
+				$('#lst2').show();
+			},
+			error:function(err){
+				alert('error: '+err.status);
+			}
+			
+		})
+	}//-------------
+	
+	function setting(vtitle){
+		//alert(vtitle);
+		$('#books').val(vtitle);
+		$('#lst1').hide();
+		$('#lst2').hide();
+	}
+	
+	$(function(){
+		getAllBook();
+	})//--------------
 	
 </script>
 </head>
@@ -148,7 +287,8 @@ response.setHeader("Cache-Control","no-cache");
  action="" method="POST">
 <div class="form-group">
 <label for="sel" class="control-label col-sm-2">출판사</label>
-<span id="sel"></span><span id="sel2"></span>
+<span id="sel"></span>
+<span id="sel2"></span>
 </div>
 <p>
 <div class='form-group'>
@@ -171,7 +311,7 @@ response.setHeader("Cache-Control","no-cache");
 <div>
  
  <button type="button"
-  onclick="getBook()"
+  onclick="bookInfo('검색')"
   class="btn btn-primary">검색</button>
  
  <button type="button" onclick="getAllBook()" class="btn btn-success">모두보기</button>

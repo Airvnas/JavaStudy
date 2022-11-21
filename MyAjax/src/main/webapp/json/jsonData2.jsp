@@ -1,0 +1,28 @@
+<%@ page language="java" contentType="application/json; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+[
+{
+	"isbn":112233,
+	"title":"HTML입문",
+	"publish":"이지스",
+	"price":50000,
+	"published":"2022-11-21",
+	"bimage":"c.jpg"
+},
+{
+	"isbn":212233,
+	"title":"oracle입문",
+	"publish":"한빛",
+	"price":35000,
+	"published":"2022-11-21",
+	"bimage":"a.jpg"
+},
+{
+	"isbn":312233,
+	"title":"Ajax입문",
+	"publish":"Multicampus",
+	"price":25000,
+	"published":"2022-11-21",
+	"bimage":"b.jpg"
+}
+]
