@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<!--mb1 MessageImpl 빈을 등록
+		greeting과 name 값을 주입(injection
+		[1] setter injection
+		[2] constructor injection	
+		 -->
+	 <bean id="mb1" class="ex04.MessageImpl" >
+		<property name="greeting">
+			<value>즐거운 하루되세요~</value>
+		</property>
+		<property name="name" value="King"/>
+		<property name="today" >
+			<ref bean="now"/>
+		</property>
+		<property name="ran" ref="random"/>
+	</bean> 
+	<!--mb2 MessageImpl 빈을 하나더 등록
+		이름과 인삿말 Date,Random객체를 주입
+	-->
+	<bean id="mb2" class="ex04.MessageImpl">
+		<property name="name" value="Jy"/>
+		<property name="greeting" value="안녕"/>
+		<property name="today" ref="now"/>
+		<property name="ran" ref="random"/>
+	</bean>
+	
+	<bean id="now" class="java.util.Date" />
+	<bean id="random" class="java.util.Random" />
+</beans>
