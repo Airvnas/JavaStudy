@@ -18,6 +18,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectUserByUserid" resultType="User" parameterType="string">
 		select * from member where userid=#{value}
 	</select>
+	<select id="getUser" resultType="User" parameterType="int">
+		select * from member where idx=#{value}
+	</select>
 	<select id="listUser" resultType="User" parameterType="com.user.model.PagingVO">
 		select member.*, decode(status,0,'일반회원',-1,'정지회원',-2,'탈퇴회원') statusStr
 		from member order by idx desc
@@ -25,5 +28,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<delete id="deleteUser" parameterType="int">
 		delete from member where idx=#{value}
 	</delete>
-	
+	<update id="updateUser" parameterType="User" >
+		update member set userid=#{userid},name=#{name},pwd=#{pwd},hp1=#{hp1},hp2=#{hp2},
+						hp3=#{hp3},post=#{post:VARCHAR},addr1=#{addr1:VARCHAR},
+						addr2=#{addr2:VARCHAR},indate=sysdate 
+		where idx=#{idx}
+	</update>
 </mapper>

@@ -6,10 +6,11 @@
 <script type="text/javascript" src="./js/userCheck.js"></script>
 
 <div class="container" style="height:750px;overflow:auto;">
+
 	<h1 class="text-center mt-1">Signup</h1>
 	<!-- hidden data----------------------------------------- -->
 	<form name="mf" action="join" method="post">
-		<input type="text" name="id_flag" id="id_flag" value="N">
+		<input type="text" name="id_flag"id="id_flag" value="N">
 		<table class="table">
 			<tr>
 				<td width="20%" class="m1"><b>이름</b></td>

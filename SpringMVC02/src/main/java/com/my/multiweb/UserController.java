@@ -84,14 +84,26 @@ public class UserController {
 	@ResponseBody
 	public Map<String,String> idCheck(@RequestParam("userid") String userid){
 		//log.info("userid==="+userid);
+		log.info("uid==="+userid);
 		boolean isUse=userService.idCheck(userid);
 		String result=(isUse)?"ok":"no";
-		
+		log.info("logisUse==="+result);
 		Map<String,String>map=new HashMap<>();
 		map.put("result", result);
 		return map;
 	}
-	
+	@GetMapping(value="/admin/idcheck", produces="application/json")
+	@ResponseBody
+	public Map<String,String> idCheck2(@RequestParam("userid") String userid){
+		//log.info("userid==="+userid);
+		//log.info("uid==="+userid);
+		boolean isUse=userService.idCheck(userid);
+		String result=(isUse)?"ok":"no";
+		//log.info("logisUse==="+result);
+		Map<String,String>map=new HashMap<>();
+		map.put("result", result);
+		return map;
+	}
 	
 	
 	@GetMapping("/admin/userList")
@@ -113,7 +125,33 @@ public class UserController {
 		return "redirect:userList";
 	}
 	
-	
+	@PostMapping("/admin/userEdit")
+	public String userEditForm(Model m,@RequestParam(defaultValue = "0") int idx) {
+		log.info("editidx===="+idx);
+		if(idx==0) {
+			
+			return "redirect:userList";
+		}
+		UserVO user=userService.getUser(idx);
+		m.addAttribute("user",user);
+		return "/member/userEdit";
+		
+	}
+	@PostMapping("/admin/userEditEnd")
+	public String userEditEnd(Model m,UserVO user) {
+		if(user==null) {
+			return "javascript:history.back()";
+		}
+		log.info("userid= "+user.toString());
+		int n=userService.updateUser(user);
+		log.info("update=="+n);
+		String str=(n>0)?"수정 성공":"수정 실패";
+		String loc=(n>0)?"userList":"javascript:history.back()";
+		m.addAttribute("message",str);
+		m.addAttribute("loc",loc);
+		
+		return "msg";
+	}
 	
 	
 }

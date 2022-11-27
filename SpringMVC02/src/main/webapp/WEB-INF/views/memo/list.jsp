@@ -42,9 +42,9 @@
 			<td>${memo.msg }
 			<span class="float-right">
 			[<fmt:formatDate value="${memo.wdate}"/>]
-			</span></td>
+			</span></td> 
 			<td>${memo.name }</td>
-			<td>
+			<td> 
 			<a href="memoEdit?idx=${memo.idx}">수정</a>|
 			<a href="memoDel?idx=${memo.idx}">삭제</a></td>
 		</tr>

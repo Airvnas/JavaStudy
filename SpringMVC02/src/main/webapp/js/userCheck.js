@@ -4,6 +4,7 @@ function open_idcheck(){
 }//--------------------------
 
 function ajax_idcheck(uid){
+	
 	if(!uid){
 		uid=$('#userid').val();
 		if(!uid){
@@ -17,19 +18,19 @@ function ajax_idcheck(uid){
 			return;
 		}
 	}
-
+	alert(uid);
 	$.ajax({
-		type:'get',
+		type:'GET',
 		url:'idcheck?userid='+uid,
 		dataType:'json',
 		cache:false,
 		success:function(res){
 			//alert(JSON.stringify(res));
 			if(res.result=='ok'){
-				$('#id_result').html(uid+"는 사용 가능합니다.").css('color','green')
+				$('#id_result').html(uid+"는 사용 가능합니다").css('color','green')
 				$('#id_flag').val("Y");
 			}else{
-				$('#id_result').html(uid+"는 이미 사용중입니다.").css('color','red')
+				$('#id_result').html(uid+"는 이미 사용 중입니다").css('color','red')
 				$('#id_flag').val("N");
 			}
 		},
@@ -94,7 +95,7 @@ function id_check(){
 	
 	if(!isPasswd(mf.pwd)){
 		alert('비밀번호는 영문자,숫자,.,!로 4~8까지 가능해요');
-		mf.pwd.select();
+		//mf.pwd.select();
 		return;
 	}
 	if(mf.pwd.value!=mf.pwd2.value){

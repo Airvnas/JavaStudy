@@ -50,14 +50,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public int updateUser(UserVO user) {
-		// TODO Auto-generated method stub
-		return 0;
+		return userDao.updateUser(user);
 	}
 
 	@Override
 	public UserVO getUser(Integer midx) {
-		// TODO Auto-generated method stub
-		return null;
+		return userDao.getUser(midx);
 	}
 
 	@Override
