@@ -18,7 +18,7 @@ function ajax_idcheck(uid){
 			return;
 		}
 	}
-	alert(uid);
+	//alert(uid);
 	$.ajax({
 		type:'GET',
 		url:'idcheck?userid='+uid,

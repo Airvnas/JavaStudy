@@ -4,7 +4,24 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <c:import url="/top"/>
 <script type="text/javascript" src="./js/userCheck.js"></script>
-
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+function postfind(){
+	alert('aa');
+    new daum.Postcode({
+        oncomplete: function(data) {
+            if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                addr = data.roadAddress;
+            } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                addr = data.jibunAddress;
+            }
+            // 우편번호와 주소 정보를 해당 필드에 넣는다.
+            document.getElementById('post').value = data.zonecode; //우편 번호
+            document.getElementById('addr1').value = addr; //도로명 주소
+        }
+    }).open();
+}
+</script>
 <div class="container" style="height:750px;overflow:auto;">
 
 	<h1 class="text-center mt-1">Signup</h1>
@@ -54,7 +71,7 @@
 				<td width="20%" class="m1"><b>우편번호</b></td>
 				<td width="80%" class="m2">
 				<input type="text" name="post" id="post" placeholder="Post" maxlength="5">
-				<button type="button" class="btn btn-success">우편번호 찾기</button>
+				<button type="button" onclick="postfind()" class="btn btn-success">우편번호 찾기</button>
 				</td>
 			</tr>
 			<tr>
@@ -76,4 +93,6 @@
 	
 	
 </div>
+
+
 <c:import url="/foot"/>
