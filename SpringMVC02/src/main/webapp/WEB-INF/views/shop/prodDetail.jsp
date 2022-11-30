@@ -109,6 +109,7 @@
             </table>
          </div>
       </div>
+      <c:import url="/review/reviewForm"/>
 	</div>
 
 <c:import url="/foot"/>

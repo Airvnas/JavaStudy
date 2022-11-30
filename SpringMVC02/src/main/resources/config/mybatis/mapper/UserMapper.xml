@@ -34,4 +34,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 						addr2=#{addr2:VARCHAR},indate=sysdate 
 		where idx=#{idx}
 	</update>
+	
+	
 </mapper>
