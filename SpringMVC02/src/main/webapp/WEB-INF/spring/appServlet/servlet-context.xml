@@ -42,4 +42,6 @@
 		<beans:constructor-arg value="C:/myjava/Upload"/>
 	</beans:bean>
 	<!-- String upDir=new String("C:/myjava/Upload");  -->
+	<view-controller path="/reviewForm" view-name="review/reviewForm"/>
+	
 </beans:beans>

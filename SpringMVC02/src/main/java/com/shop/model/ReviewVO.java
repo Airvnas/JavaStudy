@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class ReviewVO {
 	private int num;
-	private String name;
+	private String userid;
 	private String content;
 	private int score;
 	private String filename;
