@@ -18,6 +18,9 @@
 	<logger name="com.memo.controller">
 		<level value="info" />
 	</logger>
+	<loger name="com.common.interceptor">
+		<level value="info"/>
+	</loger>
 	
 	<!-- 3rdparty Loggers -->
 	<logger name="org.springframework.core">

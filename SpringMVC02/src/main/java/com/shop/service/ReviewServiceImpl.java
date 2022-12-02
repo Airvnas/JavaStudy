@@ -22,7 +22,7 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	public int getReviewCount(int pnum_fk) {
-		return 0;
+		return this.reviewMapper.getReviewCount(pnum_fk);
 	}
 
 	@Override
@@ -37,8 +37,7 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	public int updateReview(ReviewVO rvo) {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.reviewMapper.updateReview(rvo);
 	}
 
 	@Override

@@ -18,4 +18,15 @@
 	<delete id="deleteReview" parameterType="_int">
 		delete from review where num=#{num}
 	</delete>
+	<update id="updateReview" parameterType="Review">
+		update review set userid=#{userid}, score=#{score:NUMERIC},content=#{content:VARCHAR}
+		<if test="filename!=null and filename!=''">
+		,filename=#{filename}
+		</if>
+		 where num=#{num}
+	</update>
+	<select id="getReviewCount" parameterType="_int" resultType="_int">
+		select count(num) from review where pnum_fk=#{value}
+	</select>
+	
 </mapper>
