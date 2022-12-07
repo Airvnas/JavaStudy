@@ -68,32 +68,37 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public int deleteBoard(Integer idx) {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.boardMapper.deleteBoard(idx);
 	}
 
 	@Override
 	public int updateBoard(BoardVO board) {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.boardMapper.updateBoard(board);
 	}
 
 	@Override
 	public int rewriteBoard(BoardVO board) {
-		// TODO Auto-generated method stub
-		return 0;
+		//[1] 부모글(원글)의 글번호로 부모글의 refer(글 그룹번호) lev(답변레벨) sunbun(순번)가져오기==>select
+		BoardVO parent=this.selectRefLevSunbun(board.getNum());
+		//[2] 기존에 달린 답변글들이 있다면 내 답변글을 insert하기 전에 기존의 답변글들의 순번을 하나씩 증가시킨다.==>update
+		int n=this.updateSunbun(parent);
+		//[3]내가 쓴 답변글을 insert한다.==>insert
+		//내가쓴 답변글==>board
+		//부모글==>parent(부모글의 refer,lev,sunbun)
+		board.setRefer(parent.getRefer());//글 그룹번호를 부모글과 동일하게
+		board.setLev(parent.getLev()+1);//답변레벨=부모레벨+1
+		board.setSunbun(parent.getSunbun()+1);//순서=부모순번+1
+		return this.boardMapper.rewriteBoard(board);
 	}
 
 	@Override
 	public BoardVO selectRefLevSunbun(int idx) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.boardMapper.selectRefLevSunbun(idx);
 	}
 
 	@Override
 	public int updateSunbun(BoardVO parent) {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.boardMapper.updateSunbun(parent);
 	}
 
 	
