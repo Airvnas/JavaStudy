@@ -1,7 +1,9 @@
 package com.my.multiweb;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.board.model.BoardVO;
+import com.board.model.PagingVO;
 import com.board.service.BoardService;
 import com.common.CommonUtil;
 
@@ -99,6 +102,7 @@ public class BoardController {
 		
 		
 		if("write".equals(board.getMode())) {//글쓰기 모드라면
+			//for(int i=0;i<30;i++)
 			n=boardService.insertBoard(board);
 			str="글쓰기 ";
 		}else if("rewrite".equals(board.getMode())) {//답변 글쓰기라면
@@ -117,12 +121,59 @@ public class BoardController {
 		
 		return util.addMsgLoc(m, str, loc);//msg를 반환
 	}//--------------------------------------------------------
-	
-	@GetMapping("/list")
-	public String boardList(Model m) {
-		List<BoardVO> arr=boardService.selectBoardAll(null);
-		m.addAttribute("boardArr",arr);
+	@GetMapping("list")
+	public String boardListPaging(Model m,@ModelAttribute("page") PagingVO page) {
+		log.info("page===="+page);
+		//1.총 게시글 수 가져오기
+		int totalCount=this.boardService.getTotalCount(page);
+		page.setTotalCount(totalCount);
+		page.setPageSize(5);//한 페이지당 보여줄 게시글 개수
+		page.setPagingBlock(5);//페이징 블럭 단위 값:5
+		//////////////////////////////////////////
+		page.init();//페이징 관련 연산을 수행하는 메서드 호출
+		/////////////////////////////////////////
+		log.info("2.page==="+page);
 		
+		List<BoardVO> boardArr=this.boardService.selectBoardAllPaging(page);
+		
+		m.addAttribute("paging",page);
+		m.addAttribute("boardArr",boardArr);
+		return "board/boardList2";
+	}
+	
+	
+	@GetMapping("/list_old")
+	public String boardList(Model m,@RequestParam(defaultValue="1") int cpage) {
+		log.info("cpage===="+cpage);//현재 보여줄 페이지
+		if(cpage<=0) {
+			cpage=1;
+		}
+		//1.총 게시글 수 가져오기
+		int totalCount=this.boardService.getTotalCount(null);
+		//2.한페이지당 보여줄 목록 개수 정하기
+		int pageSize=5;
+		int pageCount=(totalCount-1)/pageSize+1;
+		if(cpage>pageCount) {
+			cpage=pageCount;
+		}
+		log.info("cpage==========="+cpage);
+		//[1]where rn between A and B
+//		int end=cpage*pageSize;
+//		int start=end-(pageSize-1);
+		
+		//[2]where rn>A and rn<B
+		int start=(cpage-1)*pageSize;
+		int end=start+(pageSize+1);
+		
+		Map<String,Integer> map=new HashMap<>();
+		map.put("start", Integer.valueOf(start));
+		map.put("end", Integer.valueOf(end));
+		
+		List<BoardVO> arr=boardService.selectBoardAll(map);
+		m.addAttribute("boardArr",arr);
+		m.addAttribute("totalCount",totalCount);
+		m.addAttribute("pageCount",pageCount);
+		m.addAttribute("cpage",cpage);
 		return "board/boardList";
 	}
 	
