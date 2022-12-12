@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -122,23 +124,32 @@ public class BoardController {
 		return util.addMsgLoc(m, str, loc);//msg를 반환
 	}//--------------------------------------------------------
 	@GetMapping("list")
-	public String boardListPaging(Model m,@ModelAttribute("page") PagingVO page) {
+	public String boardListPaging(Model m,@ModelAttribute("page") PagingVO page,
+							HttpServletRequest req,@RequestHeader("User-Agent") String userAgent) {
+		String myctx=req.getContextPath();
+		
+		HttpSession ses=req.getSession();
+		
+		
 		log.info("page===="+page);
-		//1.총 게시글 수 가져오기
+		//1.총 게시글 수 가져오기 or 검색한 게시글 수 가져오기
 		int totalCount=this.boardService.getTotalCount(page);
 		page.setTotalCount(totalCount);
-		page.setPageSize(5);//한 페이지당 보여줄 게시글 개수
+		//page.setPageSize(10);//한 페이지당 보여줄 게시글 개수 <== 파라미터로 받음
 		page.setPagingBlock(5);//페이징 블럭 단위 값:5
 		//////////////////////////////////////////
-		page.init();//페이징 관련 연산을 수행하는 메서드 호출
+		page.init(ses);//페이징 관련 연산을 수행하는 메서드 호출
 		/////////////////////////////////////////
 		log.info("2.page==="+page);
-		
+		//2.게시글 목록 가져오기 or 검색한 게시글 목록 가져오기
 		List<BoardVO> boardArr=this.boardService.selectBoardAllPaging(page);
-		
+		String loc="board/list";
+		//3.페이지 네비게이션 문자열 받아오기
+		String pageNavi=page.getPageNavi(myctx, loc, userAgent);
+		m.addAttribute("pageNavi",pageNavi);
 		m.addAttribute("paging",page);
 		m.addAttribute("boardArr",boardArr);
-		return "board/boardList2";
+		return "board/boardList3";
 	}
 	
 	

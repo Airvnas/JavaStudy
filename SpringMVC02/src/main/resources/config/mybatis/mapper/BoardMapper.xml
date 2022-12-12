@@ -15,7 +15,9 @@
 	<select id="selectBoardAllPaging" resultType="Board" parameterType="Paging">
 		select * from(
 		select row_number() over(order by refer desc,sunbun asc) rn,spring_board.*
-		from spring_board)
+		from spring_board 
+		<include refid="findWhere"/>
+		)
 		<![CDATA[
 		where rn > #{start} and rn < #{end}
 		]]>
@@ -38,9 +40,26 @@
 		<!-- where rn between #{start} and #{end} -->
 		
 	</select>
+	<!-- 검색시 사용할 where절을 findWhere로 등록 -->
+	<sql id="findWhere">
+		<if test="findType!=null and findKeyword!=''">
+			<where>
+				<if test="findType==1"><!-- 글제목 -->
+					subject like '%'||#{findKeyword}||'%'
+				</if>
+				<if test="findType==2"><!-- 작성자 -->
+					name like '%'||#{findKeyword}||'%'
+				</if>
+				<if test="findType==3"><!-- 글내용 -->
+					content like '%'||#{findKeyword}||'%'
+				</if>
+			</where>
+		</if>
+	</sql>
 	
 	<select id="getTotalCount" resultType="int" parameterType="Paging">
 		select count(num) from spring_board
+		<include refid="findWhere"/>
 	</select>
 	
 	
