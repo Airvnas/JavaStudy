@@ -167,7 +167,7 @@ public class TestMongoPOJO {
 		UpdateResult res=mcol.replaceOne(eq("author",vo.getAuthor()), vo);
 		System.out.println(res.getModifiedCount()+"개의 도큐먼트가 교체되었습니다.");
 	}//--------------------------------------------
-	
+	 
 	public void findOneAndReplace() {
 		mcol=mdb.getCollection(table,PostVO.class);
 		FindIterable<PostVO>cursor= mcol.find(eq("author","King"));
