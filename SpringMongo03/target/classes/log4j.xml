@@ -17,6 +17,9 @@
 	<logger name="com.mongo.posts">
 		<level value="info"/>
 	</logger>
+	<logger name="com.mongo.melon">
+		<level value="info"/>
+	</logger>
 	
 	<!-- 3rdparty Loggers -->
 	<logger name="org.springframework.core">
