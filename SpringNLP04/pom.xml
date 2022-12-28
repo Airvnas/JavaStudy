@@ -182,6 +182,18 @@
 			<artifactId>jsoup</artifactId>
 			<version>1.15.3</version>
 		</dependency>
+		 <!-- https://mvnrepository.com/artifact/nz.ac.waikato.cms.weka/weka-dev -->
+		<!--<dependency>
+			<groupId>nz.ac.waikato.cms.weka</groupId>
+			<artifactId>weka-dev</artifactId>
+			<version>3.9.3</version>
+		</dependency>
+		https://mvnrepository.com/artifact/org.apache.commons/commons-math3
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-math3</artifactId>
+			<version>3.6.1</version>
+		</dependency>--> 
 	</dependencies>
 	<build>
 		<plugins>
@@ -199,6 +211,8 @@
 					<downloadJavadocs>true</downloadJavadocs>
 				</configuration>
 			</plugin>
+		
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
